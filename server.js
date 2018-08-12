@@ -42,7 +42,7 @@ var initDb = function(callback) {
   var mongodb = require('mongodb');
   if (mongodb == null) return;
 
-  mongoose.connect(mongoURL, function(err, conn) {
+  mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
       callback(err);
       return;
@@ -91,6 +91,55 @@ app.get('/pagecount', function (req, res) {
   } else {
     res.send('{ pageCount: -1 }');
   }
+});
+
+var Schema = mongoose.Schema;
+
+// todos
+var todosSchema = new Schema({
+    todoList: [{
+        todoName:{
+          type: String
+        },
+        todoStatus: {
+          type: Boolean
+        }
+    }],
+    user :{
+      type: String
+    },
+    password :{
+      type: String
+    }
+});
+
+var Todos = mongoose.model('todos', todosSchema);
+
+app.get('/todos/:userName', function(req, res) {
+
+      console.log(req.params.userName);
+    Todos.find({user:req.params.userName},{todoList:1}, function(err, todosRes) {
+
+        if (!todosRes) {
+            res.statusCode = 404;
+
+            return res.json({
+                error: 'Not found'
+            });
+        };
+
+        if (!err) {
+
+            return res.status(200).json(todosRes[0].todoList);
+        } else {
+            res.statusCode = 500;
+            //  log.error('Internal error(%d): %s',res.statusCode,err.message);
+
+            return res.json({
+                error: 'Server error'
+            });
+        };
+    });
 });
 
 // error handling
