@@ -1,14 +1,16 @@
 //  OpenShift sample Node application
 var express = require('express');
 var bodyParser = require('body-parser');
-const cors = require('cors');
+var mongoose = require('mongoose');
+//const cors = require('cors');
 
 //var bcrypt = require('bcrypt');
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // Parses urlencoded bodies
 app.use(bodyParser.json());
-app.use(cors());
+
+//app.use(cors());
 
 Object.assign=require('object-assign')
 
