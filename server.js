@@ -151,7 +151,6 @@ Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
   //   isValid= true;
   // }
     if(!isValid){
-      res.statusCode = 400;
 
       return res.json({
           error: 'password does not match'
