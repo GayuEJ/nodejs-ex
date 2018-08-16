@@ -95,7 +95,7 @@ console.log(req.body)
 console.log(userDetails);
 
 userDetails.password=bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
-userDetails.password=req.body.password;
+//userDetails.password=req.body.password;
 
 Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
   console.log(todoRes);
@@ -145,9 +145,9 @@ Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
 
   //var isValid = false;
 
-  if(todoRes.password === userDetails.password){
-    isValid= true;
-  }
+  // if(todoRes.password === userDetails.password){
+  //   isValid= true;
+  // }
     if(!isValid){
       res.statusCode = 400;
 
