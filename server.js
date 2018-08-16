@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 const cors = require('cors');
 
-//var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt');
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // Parses urlencoded bodies
@@ -61,42 +61,6 @@ var initDb = function(callback) {
   });
 };
 
-// app.get('/', function (req, res) {
-//   // try to initialize the db on every request if it's not already
-//   // initialized.
-//   if (!db) {
-//     initDb(function(err){});
-//   }
-//   if (db) {
-//     var col = db.collection('counts');
-//     // Create a document with request IP and current time of request
-//     col.insert({ip: req.ip, date: Date.now()});
-//     col.count(function(err, count){
-//       if (err) {
-//         console.log('Error running count. Message:\n'+err);
-//       }
-//       res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-//     });
-//   } else {
-//     res.render('index.html', { pageCountMessage : null});
-//   }
-// });
-
-  // app.get('/pagecount', function (req, res) {
-  //   // try to initialize the db on every request if it's not already
-  //   // initialized.
-  //   if (!db) {
-  //     initDb(function(err){});
-  //   }
-  //   if (db) {
-  //     db.collection('counts').count(function(err, count ){
-  //       res.send('{ pageCount: ' + count + '}');
-  //     });
-  //   } else {
-  //     res.send('{ pageCount: -1 }');
-  //   }
-  // });
-
 var Schema = mongoose.Schema;
 
 // todos
@@ -130,9 +94,17 @@ console.log(req.body)
 
 console.log(userDetails);
 
-//userDetails.password=bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
+userDetails.password=bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
 userDetails.password=req.body.password;
 
+Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
+  console.log(todoRes);
+  if(todoRes != null){
+    res.statusCode = 400;
+    return res.json({
+        error: 'User already exist, please select a new userName'
+    });
+  }
     userDetails.save(function(err, todos) {
         console.log(err);
         if (!err) {
@@ -146,6 +118,7 @@ userDetails.password=req.body.password;
                 error: 'Server error'
             });
         }
+    });
     });
 });
 
@@ -168,9 +141,9 @@ Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
   }
   console.log(todoRes.password);
 
-  //var isValid = bcrypt.compareSync(userDetails.password, todoRes.password);
+  var isValid = bcrypt.compareSync(userDetails.password, todoRes.password);
 
-  var isValid = false;
+  //var isValid = false;
 
   if(todoRes.password === userDetails.password){
     isValid= true;
@@ -219,38 +192,6 @@ app.get('/todos/:userName', function(req, res) {
         };
     });
 });
-
-// app.get('/todo/:id', function(req, res) {
-//
-//   // console.log(req.params.id);
-//     Todos.findOne({
-//         "_id": req.params.id
-//     }, function(err, todos) {
-//
-// console.log(todos);
-//
-//         if (!todos) {
-//             res.statusCode = 404;
-//             return res.json({
-//                 error: 'Not found'
-//             });
-//         };
-//
-//         if (!err) {
-//             return res.json({
-//                 status: 'OK',
-//                 todos: todos
-//             });
-//         } else {
-//             res.statusCode = 500;
-//             //  log.error('Internal error(%d): %s',res.statusCode,err.message);
-//
-//             return res.json({
-//                 error: 'Server error'
-//             });
-//         };
-//     });
-// });
 
 app.post('/todo/', function(req, res) {
 
