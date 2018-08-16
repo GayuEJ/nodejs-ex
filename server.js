@@ -100,7 +100,7 @@ userDetails.password=bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), n
 Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
   console.log(todoRes);
   if(todoRes != null){
-    res.statusCode = 400;
+    //res.statusCode = 400;
     return res.json({
         status: '400',
         error: 'User already exist, please select a new userName'
@@ -114,7 +114,7 @@ Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
                 todos: todos
             });
         } else {
-            res.statusCode = 500;
+            //res.statusCode = 500;
             res.json({
                 status: '500',
                 error: 'Server error'
