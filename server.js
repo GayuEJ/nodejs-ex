@@ -102,6 +102,7 @@ Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
   if(todoRes != null){
     res.statusCode = 400;
     return res.json({
+        status: '400'
         error: 'User already exist, please select a new userName'
     });
   }
@@ -109,12 +110,13 @@ Todos.findOne({ user: userDetails.user }, function(err, todoRes) {
         console.log(err);
         if (!err) {
             return res.json({
-
+                status: '200',
                 todos: todos
             });
         } else {
             res.statusCode = 500;
             res.json({
+                status: '500'
                 error: 'Server error'
             });
         }
